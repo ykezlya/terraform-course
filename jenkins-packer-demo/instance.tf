@@ -3,7 +3,7 @@ data "aws_ami" "ubuntu" {
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
   }
 
   filter {
@@ -32,6 +32,9 @@ resource "aws_instance" "jenkins-instance" {
 
   # iam instance profile
   iam_instance_profile = aws_iam_instance_profile.jenkins-role.name
+  tags = {
+    Name = "jenkins-instance"
+  }
 }
 
 resource "aws_ebs_volume" "jenkins-data" {
@@ -63,5 +66,9 @@ resource "aws_instance" "app-instance" {
 
   # the public SSH key
   key_name = aws_key_pair.mykeypair.key_name
+  tags = {
+    Name = "app-instance-${count.index + 1}"
+  }
+  
 }
 
